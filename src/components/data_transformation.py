@@ -42,7 +42,7 @@ class datatransformation:
                  steps = [
                      ("imputer",SimpleImputer(strategy="most_frequent")),
                      ("one_hot_encoder",OneHotEncoder()),
-                     ("scaler",StandardScaler(with_mean = False))
+                     ("scaler",StandardScaler(with_mean = False))       #very important to write with mean false for cat data
                  ]
             )
 
@@ -90,12 +90,16 @@ class datatransformation:
             train_arr = np.c_[input_feature_train_arr,np.array(target_feature_train_df)]
             test_arr = np.c_[input_feature_test_arr,np.array(target_feature_test_df)]
 
-            logging.info("saved preprocessing obj")
+            #np.c_ is a convenient way to concatenate arrays column-wise.
+            #it combines the feature matrix and the target vector into one big array where the last column is the target.
+            #Can be passed easily to training functions like model.fit(X[:, :-1], X[:, -1]).
+
 
             save_object(
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessing_obj
             )
+            logging.info("saved preprocessing obj")
 
             return(
                 train_arr,
